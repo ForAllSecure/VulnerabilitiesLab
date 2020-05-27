@@ -19,7 +19,9 @@ period has terminated. You will find:
 We will be adding to this as we blog at
 [https://blog.forallsecure.com](https://blog.forallsecure.com). Currently we have:
 
- * [Cereal CVE 2020-11104 & 11105](https://github.com/dbrumley/mayhemit/tree/master/cereal-cve-2020-11104-11105)
+ * [Cereal CVE 2020-11104 &
+   11105](https://github.com/dbrumley/mayhemit/tree/master/cereal-cve-2020-11104-11105)
+   with [blog post](https://blog.forallsecure.com/uncovering-memory-leak-vulnerabilities-in-cereal-cve-2020-11104-cve-2020-11105?hs_preview=lcTktONj-29679519177).
  * [OpenSSL CVE 2014-0160 -
    Heartbleed](https://github.com/dbrumley/mayhemit/tree/master/openssl-cve-2014-0160). This
    is a template for how this directory should look; this
