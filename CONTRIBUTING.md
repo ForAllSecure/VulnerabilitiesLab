@@ -10,7 +10,7 @@ policy)[https://googleprojectzero.blogspot.com/p/vulnerability-disclosure-faq.ht
 
 ## Pull Request Process
 
- 1. Ensure that your example passes `./mayhemit.sh sanity`.
+ 1. Ensure that your example passes `./mayhemit.sh --sanity <project directory>`.
  2. Ensure the `README.md` for your example is detailed.
  3. Ensure you have the rights for any files in the corpus. If you did
     not create them, you should include a note in your README.md of why
