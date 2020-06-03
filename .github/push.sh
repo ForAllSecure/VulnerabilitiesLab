@@ -1,4 +1,7 @@
+#! /bin/bash
 # Pushes image to logged in docker registry (tagged with github ref)
+
+set -xe
 
 IMAGE_ID=$1
 
