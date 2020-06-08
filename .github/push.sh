@@ -1,12 +1,13 @@
 # Pushes image to logged in docker registry (tagged with github ref)
 
 IMAGE_ID=$1
+REF=$2
 
 # Change all uppercase to lowercase
 IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
 # Strip git ref prefix from version
-VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+VERSION=$(echo "$REF" | sed -e 's,.*/\(.*\),\1,')
 
 # Strip "v" prefix from tag name
 [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
