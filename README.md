@@ -18,10 +18,10 @@ period has terminated. You will find:
 
 We will be adding to this as find more bugs! Currently we have:
 
- * [Cereal CVE 2020-11104 & 2020-11105](https://github.com/dbrumley/mayhemit/tree/master/cereal-cve-2020-11104-11105)
+ * [Cereal CVE 2020-11104 & 2020-11105](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/cereal-cve-2020-11104-11105)
    with [blog post](https://blog.forallsecure.com/uncovering-memory-leak-vulnerabilities-in-cereal-cve-2020-11104-cve-2020-11105?hs_preview=lcTktONj-29679519177).
- * [sthttpd CVE 2017-10671](https://github.com/dbrumley/mayhemit/tree/master/sthttpd-cve-2017-10671)
- * [OpenSSL CVE 2014-0160 - Heartbleed](https://github.com/dbrumley/mayhemit/tree/master/openssl-cve-2014-0160).
+ * [sthttpd CVE 2017-10671](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/sthttpd-cve-2017-10671)
+ * [OpenSSL CVE 2014-0160 - Heartbleed](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/openssl-cve-2014-0160).
    This is a template for how this directory should look; this
    vulnerability was originally found by Google Security [reference](https://heartbleed.com/).
 
