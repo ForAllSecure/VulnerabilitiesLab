@@ -17,7 +17,7 @@ jobs:
       run: ./mayhemit.sh --build openssl-cve-2014-0160
 
     - name: Log into the registry
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
     - name: Push the docker image
       run: ./.github/push.sh forallsecure/openssl-cve-2014-0160 "${{ github.ref }}"
@@ -31,7 +31,7 @@ jobs:
       run: ./mayhemit.sh --build cereal-cve-2020-11104-11105
 
     - name: Log into the registry
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
     - name: Push the docker image
       run: ./.github/push.sh forallsecure/cereal-cve-2020-11104-11105 "${{ github.ref }}"
