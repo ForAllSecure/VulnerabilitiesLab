@@ -3,6 +3,7 @@
 IMAGE_ID=$1
 REF=$2
 
+mkdir -p ~/.docker/
 touch ~/.docker/config.json
 (grep -q "index.docker.io" ~/.docker/config.json)
 LOGGED_OUT=$?
