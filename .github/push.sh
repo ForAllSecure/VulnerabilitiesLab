@@ -1,7 +1,15 @@
-# Pushes image to logged in docker registry (tagged with github ref)
+# Pushes image to logged in docker registry (tagged with github ref) if logged in
 
 IMAGE_ID=$1
 REF=$2
+
+(grep -q "index.docker.io" ~/.docker/config.json)
+LOGGED_OUT=$?
+
+if [[ $LOGGED_OUT = 1 ]]; then
+    echo "Not logged into docker -- not pushing"
+    exit 0
+fi
 
 # Change all uppercase to lowercase
 IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
