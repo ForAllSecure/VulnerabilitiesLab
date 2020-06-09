@@ -19,7 +19,7 @@ IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 VERSION=$(echo "$REF" | sed -e 's,.*/\(.*\),\1,')
 
 # Strip "v" prefix from tag name
-[[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+[[ "$REF" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
 # Use docker `latest` tag convention
 [ "$VERSION" == "master" ] && VERSION=latest
