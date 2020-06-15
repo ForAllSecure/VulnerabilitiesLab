@@ -35,3 +35,17 @@ jobs:
 
     - name: Push the docker image
       run: ./.github/push.sh forallsecure/cereal-cve-2020-11104-11105 "${{ github.ref }}"
+
+  sthttpd-cve-2017-10671:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: ./mayhemit.sh --build sthttpd-cve-2017-10671
+
+    - name: Log into the registry
+      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+
+    - name: Push the docker image
+      run: ./.github/push.sh forallsecure/sthttpd-cve-2017-10671 "${{ github.ref }}"
