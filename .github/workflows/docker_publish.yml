@@ -49,3 +49,17 @@ jobs:
 
     - name: Push the docker image
       run: ./.github/push.sh forallsecure/sthttpd-cve-2017-10671 "${{ github.ref }}"
+
+  netflix-cve-2019-10028:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: ./mayhemit.sh --build netflix-cve-2019-10028
+
+    - name: Log into the registry
+      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+
+    - name: Push the docker image
+      run: ./.github/push.sh forallsecure/netflix-cve-2019-10028 "${{ github.ref }}"
