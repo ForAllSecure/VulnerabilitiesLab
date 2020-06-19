@@ -9,7 +9,6 @@ on:
 jobs:
 
   openssl-cve-2014-0160:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -18,59 +17,35 @@ jobs:
       run: ./mayhemit.sh --build openssl-cve-2014-0160
 
     - name: Log into the registry
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
     - name: Push the docker image
-      run: |
-        IMAGE_ID=forallsecure/openssl-cve-2014-0160
-
-        # Change all uppercase to lowercase
-        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-        # Strip git ref prefix from version
-        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-        # Strip "v" prefix from tag name
-        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-        # Use docker `latest` tag convention
-        [ "$VERSION" == "master" ] && VERSION=latest
-
-        echo IMAGE_ID=$IMAGE_ID
-        echo VERSION=$VERSION
-
-        docker tag $IMAGE_ID $IMAGE_ID:$VERSION
-        docker push $IMAGE_ID:$VERSION
+      run: ./.github/push.sh forallsecure/openssl-cve-2014-0160 "${{ github.ref }}"
 
   cereal-cve-2020-11104-11105:
-
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: ./mayhemit.sh --build cereal-cve-2020-11104-11105
 
     - name: Log into the registry
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
     - name: Push the docker image
-      run: |
-        IMAGE_ID=forallsecure/cereal-cve-2020-11104-11105
+      run: ./.github/push.sh forallsecure/cereal-cve-2020-11104-11105 "${{ github.ref }}"
 
-        # Change all uppercase to lowercase
-        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+  sthttpd-cve-2017-10671:
+    runs-on: ubuntu-latest
 
-        # Strip git ref prefix from version
-        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: ./mayhemit.sh --build sthttpd-cve-2017-10671
 
-        # Strip "v" prefix from tag name
-        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+    - name: Log into the registry
+      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
-        # Use docker `latest` tag convention
-        [ "$VERSION" == "master" ] && VERSION=latest
-
-        echo IMAGE_ID=$IMAGE_ID
-        echo VERSION=$VERSION
-
-        docker tag $IMAGE_ID $IMAGE_ID:$VERSION
-        docker push $IMAGE_ID:$VERSION
+    - name: Push the docker image
+      run: ./.github/push.sh forallsecure/sthttpd-cve-2017-10671 "${{ github.ref }}"
