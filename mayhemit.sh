@@ -180,9 +180,9 @@ run_cmd() {
     for mayhem in `ls mayhem/`; do
         pushd mayhem/$mayhem > /dev/null
         if [ $FLAG_DURATION -ne 0 ]; then
-            cmd="$cli run ."
-        else
             cmd="$cli run --duration $ARG_DURATION ."
+        else
+            cmd="$cli run ."
         fi
         run_id=$($cmd)
         if [ $? -ne 0 ]; then
