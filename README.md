@@ -20,6 +20,7 @@ We will be adding to this as find more bugs! Currently we have:
 
  * [Cereal CVE 2020-11104 & 2020-11105](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/cereal-cve-2020-11104-11105)
    with [blog post](https://blog.forallsecure.com/uncovering-memory-leak-vulnerabilities-in-cereal-cve-2020-11104-cve-2020-11105?hs_preview=lcTktONj-29679519177).
+ * [objdump CVE's 2017-124xx](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/objdump-cve-2017-124xx) - [read more](https://blog.forallsecure.com/applying-cyber-grand-challenge-technology-to-real-software).
  * [sthttpd CVE 2017-10671](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/sthttpd-cve-2017-10671)
  * [OpenSSL CVE 2014-0160 - Heartbleed](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/openssl-cve-2014-0160).
    This is a template for how this directory should look; this
