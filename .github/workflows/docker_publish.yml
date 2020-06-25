@@ -78,6 +78,20 @@ jobs:
     - name: Push the docker image
       run: ./.github/push.sh forallsecure/uboot-cve-2019-13103-13106 "${{ github.ref }}"
 
+  oniguruma-cve-2019-13224-13225:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: ./mayhemit.sh --build oniguruma-cve-2019-13224-13225
+
+    - name: Log into the registry
+      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+
+    - name: Push the docker image
+      run: ./.github/push.sh forallsecure/oniguruma-cve-2019-13224-13225 "${{ github.ref }}"
+
   stb-cve-2019-132xx:
     runs-on: ubuntu-latest
 
