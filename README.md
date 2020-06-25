@@ -21,10 +21,11 @@ We will be adding to this as find more bugs! Currently we have:
  * [Cereal CVE 2020-11104 & 2020-11105](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/cereal-cve-2020-11104-11105)
    with [blog post](https://blog.forallsecure.com/uncovering-memory-defects-in-cereal).
  * [Oniguruma Regex CVEs 2019-13224 & 2019-13225](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/oniguruma-cve-2019-13224-13225)
- * [Das U-Boot CVE 2019-13103 to 2019-13106](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/uboot-cve-2019-13103-13106) - read more [here](https://blog.forallsecure.com/forallsecure-uncovers-critical-vulnerabilities-in-das-u-boot)
- * [Netflix Dial CVE 2019-10028](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/netflix-cve-2019-10028) - read more [here](https://blog.forallsecure.com/forallsecure-uncovers-vulnerability-in-netflix-dial-software)
+ * [MATIO CVE 2019-13107](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/matio-cve-2019-13107) - read more [here](https://blog.forallsecure.com/analyzing-matio-and-stb_vorbis-libraries-with-mayhem).
+ * [Das U-Boot CVE 2019-13103 to 2019-13106](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/uboot-cve-2019-13103-13106) - read more [here](https://blog.forallsecure.com/forallsecure-uncovers-critical-vulnerabilities-in-das-u-boot).
+ * [Netflix Dial CVE 2019-10028](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/netflix-cve-2019-10028) - read more [here](https://blog.forallsecure.com/forallsecure-uncovers-vulnerability-in-netflix-dial-software).
  * [sthttpd CVE 2017-10671](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/sthttpd-cve-2017-10671)
- * [OpenSSL CVE 2014-0160 - Heartbleed](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/openssl-cve-2014-0160).
+ * [OpenSSL CVE 2014-0160 - Heartbleed](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/openssl-cve-2014-0160)
    This is a template for how this directory should look; this
    vulnerability was originally found by Google Security [reference](https://heartbleed.com/).
 
