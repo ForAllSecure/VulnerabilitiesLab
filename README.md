@@ -25,6 +25,7 @@ We will be adding to this as find more bugs! Currently we have:
  * [Netflix Dial CVE 2019-10028](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/netflix-cve-2019-10028) - read more [here](https://blog.forallsecure.com/forallsecure-uncovers-vulnerability-in-netflix-dial-software)
  * [objdump CVEs 2017-124xx](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/objdump-cve-2017-124xx) - [read more](https://blog.forallsecure.com/applying-cyber-grand-challenge-technology-to-real-software).
  * [sthttpd CVE 2017-10671](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/sthttpd-cve-2017-10671)
+ * [GNU libm CVE-2020-10029](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/libm-cve-2020-10029)
  * [OpenSSL CVE 2014-0160 - Heartbleed](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/openssl-cve-2014-0160).
    This is a template for how this directory should look; this
    vulnerability was originally found by Google Security [reference](https://heartbleed.com/).
