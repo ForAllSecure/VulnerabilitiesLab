@@ -136,8 +136,11 @@ Migration steps:
      `--load` uses the registry `baseimage` directive in the
      `Mayhemfile` to determine the proper place to load the image:
      ```bash
-     ./mayhemit.sh --all --rewrite \"your-registry:your-port\" --load
+     ./mayhemit.sh --all --rewrite \"your-registry:your-port/openssl-cve-2014-0160\" --load
      ```
+
+     Replace `openssl-cve-2014-0160` with the folder of the project you are
+     analyzing.
   5. Test out a run, e.g.,:
      ```bash
      ./mayhemit.sh --run ./openssl-cve-2014-0160

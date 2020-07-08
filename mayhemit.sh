@@ -27,15 +27,31 @@ set -o nounset
 set -o pipefail
 #set -x
 
+# Check for required tools
+command -v jq >/dev/null 2>&1 || { \
+ echo >&2 "[ERROR] jq not on PATH. Aborting."
+ echo >&2 "[ERROR] Refer to: https://stedolan.github.io/jq/download/"
+ exit 1
+}
+
+command -v mayhem >/dev/null 2>&1 || { \
+ echo >&2 "[ERROR] mayhem not on PATH. Aborting."
+ echo >&2 "[ERROR] Refer to the installation page of your Mayhem Instance for download instructions."
+ exit 1
+}
+
 # Default flags and arguments
 FLAG_BUILD=0
-FLAG_REWRITE=0
-ARG_REWRITE=""
+FLAG_REWRITE_BASEIMAGE=0
+ARG_REWRITE_BASEIMAGE=""
+FLAG_REWRITE_TARGET=0
+ARG_REWRITE_TARGET=""
 FLAG_PUSH=0
 FLAG_ALL=0
 FLAG_DURATION=0
 ARG_DURATION=30
 FLAG_RUN=0
+ARG_MIN_CRASHES=0
 FLAG_SAVE=0
 FLAG_LOAD=0
 FLAG_STOP=0
@@ -59,20 +75,22 @@ $cli_name <options>*  <dir>+
 Utility for managing ForAllSecure fuzzing examples.
 
 Options:
-  --build         Run docker build specified directories.
-  --rewrite repo  Rewrite Mayhemfile \"baseimage\" directive to use \"repo\"
-  --run           Start a Mayhem run
-  --push          Push image to location(s) specified in \"baseimage\"
-  --all           Run on all subdirectories
-  --duration t    Specify alternate duration time for \`mayhem run\` command
-  --stop          Stop previously launched Mayhem jobs
-  --pull          Pull all docker images locally
-  --save          Run docker save.
-  --load          Run docker load.
-  --sanity        Sanity check this repo (for contributors)
-  --clean         Clean up lingering files (for contributors)
-  --verbose       Set -x bit in bash script to make more verbose
-  --help          This screen
+  --build          Run docker build specified directories
+  --rewrite repo   Rewrite Mayhemfile \"baseimage\" directive to use \"repo\"
+  --target suffix  Change the Mayhemfile \"target\" directive to add the specified suffix to the existing \"target\"
+  --run            Start a Mayhem run
+  --min-crashes c  Specify the expected number of crashes when used with --run. Stops the run when enough crashes found.
+  --push           Push image to location(s) specified in \"baseimage\"
+  --all            Run on all subdirectories
+  --duration t     Specify alternate duration time for \`mayhem run\` command
+  --stop           Stop previously launched Mayhem jobs
+  --pull           Pull all docker images locally
+  --save           Run docker save.
+  --load           Run docker load.
+  --sanity         Sanity check this repo (for contributors)
+  --clean          Clean up lingering files (for contributors)
+  --verbose        Set -x bit in bash script to make more verbose
+  --help           This screen
 
 Examples:
   \$ $cli_name --build openssl-cve-2014-0160
@@ -160,18 +178,31 @@ sanity_cmd() {
 
 
 # Rewrite where baseimage points to in Mayhemfiles
-rewrite_cmd() {
+rewrite_baseimage_cmd() {
     local project=$1
 
     for mayhem in `ls mayhem/`; do
         pushd mayhem/$mayhem > /dev/null
-        sed -i.bak "s|baseimage:.*|baseimage: ${ARG_REWRITE}/$project|g" Mayhemfile
+        sed -i.bak "s|baseimage:.*|baseimage: ${ARG_REWRITE_BASEIMAGE}|g" Mayhemfile
         popd > /dev/null
-        cli_log "$project/mayhem/$mayhem/Mayhemfile baseimage now ${ARG_REWRITE}/$project"
+        cli_log "$project/mayhem/$mayhem/Mayhemfile baseimage now ${ARG_REWRITE_BASEIMAGE}"
         cli_log "  Original Mayhemfile saved as $project/mayhem/$mayhem/Mayhemfile.bak"
     done
 }
 
+
+# Rewrite where baseimage points to in Mayhemfiles
+rewrite_target_cmd() {
+    local project=$1
+
+    for mayhem in `ls mayhem/`; do
+        pushd mayhem/$mayhem > /dev/null
+        sed -E -i.bak "s|(target:.*)|\1-${ARG_REWRITE_TARGET}|g" Mayhemfile
+        popd > /dev/null
+        cli_log "$project/mayhem/$mayhem/Mayhemfile baseimage now ${ARG_REWRITE_TARGET}/$project"
+        cli_log "  Original Mayhemfile saved as $project/mayhem/$mayhem/Mayhemfile.bak"
+    done
+}
 
 run_cmd() {
     local project=$1
@@ -191,7 +222,52 @@ run_cmd() {
         fi
         echo $run_id > _run_id
         cli_log "Running $project with run id $run_id"
-        popd > /dev/null
+
+        #
+        # When specifying a minimum number of crashes, the run will be polled
+        # periodically until the number of crashes is equal to or greater than
+        # the specified amount. If the minimum is not reached within approximately
+        # 30 minutes then the script will exit with return code 1.
+        #
+        # Regardless of the outcome, the run will be stopped if the minimum
+        # threshold is reached# or if the time limit is exceeded. This fress
+        # up analyze workers to work on other tasks.
+        #
+        if [ $ARG_MIN_CRASHES -gt 0 ]; then
+            #
+            # Don't start the the timer below until the run has started, otherwise
+            # time spent waiting for a worker will count against the time waiting
+            # for finding a crash!
+            #
+            echo "Waiting for $run_id to start..."
+            until [[ $($cli show --format json $run_id | jq -r ".[0].status" | grep -E "running") ]]; do
+                printf "."
+                sleep 5
+            done
+
+            max_sleep=1800 # Sleep for a max of ~30 minutes
+            sleep_time=0   # Track how long we have slept for
+            echo "Waiting for at least $ARG_MIN_CRASHES crashe(s)..."
+            until [[ $($cli show --format json $run_id | jq -r '.[0].crashes') -ge $ARG_MIN_CRASHES ]]; do
+                if [ "$sleep_time" -gt "$max_sleep" ]; then
+                    echo "Failed to find at least $ARG_MIN_CRASHES in less than 30 minutes. Stopping run..."
+                    popd > /dev/null
+                    stop_cmd $project
+                    exit 1
+                fi
+                printf "."
+                sleep 10
+                sleep_time=$((sleep_time+10))
+            done
+
+            crashes=$($cli show --format json $run_id | jq -r '.[0].crashes')
+            echo "$crashes found! Stopping run..."
+            popd > /dev/null
+            stop_cmd $project
+        else
+            popd > /dev/null
+        fi
+
     done
 }
 
@@ -292,8 +368,9 @@ process_project(){
 
     pushd $dir > /dev/null
     [ $FLAG_SANITY -eq 1 ] && (sanity_cmd $project)
-    [ $FLAG_BUILD -eq 1 ] && (build_cmd $project)
-    [ $FLAG_REWRITE -eq 1 ] && (rewrite_cmd $project)
+    [ $FLAG_REWRITE_BASEIMAGE -eq 1 ] && (rewrite_baseimage_cmd $project)
+    [ $FLAG_REWRITE_TARGET -eq 1 ] && (rewrite_target_cmd $project)
+    [ $FLAG_BUILD -eq 1 ] && (build_cmd $project) # rewrite before build
     [ $FLAG_PUSH -eq 1 ] && (push_cmd $project)   # rewrite before push
     [ $FLAG_RUN -eq 1 ] && (run_cmd $project)     # run after build & push
     [ $FLAG_STOP -eq 1 ] && (stop_cmd $project)   # stop a run after starting
@@ -323,14 +400,26 @@ while [ $# -gt 0 ]; do
             shift
             ;;
         --rewrite)
-            FLAG_REWRITE=1
+            FLAG_REWRITE_BASEIMAGE=1
             shift
             # if [ $# -lt 2 ]; then
             #    echo "Must provide rewrite argument"
             #    exit 1
             # fi
-            ARG_REWRITE="$1"
-            echo "ARG_REWRITE: $ARG_REWRITE"
+            ARG_REWRITE_BASEIMAGE="$1"
+            echo "ARG_REWRITE_BASEIMAGE: $ARG_REWRITE_BASEIMAGE"
+            shift      # consume flag + argument
+            echo "REMAINING ARGS: $@"
+            ;;
+        --target)
+            FLAG_REWRITE_TARGET=1
+            shift
+            # if [ $# -lt 2 ]; then
+            #    echo "Must provide target argument"
+            #    exit 1
+            # fi
+            ARG_REWRITE_TARGET="$1"
+            echo "ARG_REWRITE_TARGET: $ARG_REWRITE_TARGET"
             shift      # consume flag + argument
             echo "REMAINING ARGS: $@"
             ;;
@@ -354,6 +443,15 @@ while [ $# -gt 0 ]; do
             ;;
         --run)
             FLAG_RUN=1
+            shift
+            ;;
+        --min-crashes)
+            if [ $# -lt 2 ]; then
+                echo "Must provide expected minimum number of crashes."
+                exit 1
+            fi
+            ARG_MIN_CRASHES=$2
+            shift
             shift
             ;;
         --stop)
