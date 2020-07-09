@@ -256,7 +256,7 @@ run_cmd() {
                     exit 1
                 fi
 
-                if [[ $($cli show --format json $run_id | jq -r ".[0].status" | grep -E "running") ]]; then
+                if [[ $($cli show --format json $run_id | jq -r ".[0].status" | grep -E "pending|running") ]]; then
                     printf "."
                     sleep 10
                     sleep_time=$((sleep_time+10))
