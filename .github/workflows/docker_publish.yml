@@ -10,6 +10,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      # By disabling fail-fast, we can see the result of all projects rather than
+      # stopping everything if one project fails.
+      fail-fast: false
+
+      # This can help limit the number of jobs queued in Mayhem if the
+      # GH Actions workflow is cancelled before completion.
+      max-parallel: 2
+
       matrix:
         #
         # These values map to each sub-folder under the repository
