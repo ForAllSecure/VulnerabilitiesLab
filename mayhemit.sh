@@ -255,9 +255,16 @@ run_cmd() {
                     stop_cmd $project
                     exit 1
                 fi
-                printf "."
-                sleep 10
-                sleep_time=$((sleep_time+10))
+
+                if [[ $($cli show --format json $run_id | jq -r ".[0].status" | grep -E "running") ]]; do
+                    printf "."
+                    sleep 10
+                    sleep_time=$((sleep_time+10))
+                else
+                    echo "Run $run_id does not appear to be running any longer. Failed to find any crashes."
+                    popd > /dev/null
+                    exit 1
+                fi
             done
 
             crashes=$($cli show --format json $run_id | jq -r '.[0].crashes')
