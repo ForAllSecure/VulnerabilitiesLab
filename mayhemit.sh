@@ -224,6 +224,7 @@ run_cmd() {
         else
             cmd="$cli run ."
         fi
+
         run_id=$($cmd)
         if [ $? -ne 0 ]; then
             echo "$project failed to start. Aborting."
@@ -283,7 +284,6 @@ run_cmd() {
         else
             popd > /dev/null
         fi
-
     done
 }
 
@@ -294,7 +294,8 @@ stop_cmd() {
         pushd mayhem/$mayhem > /dev/null
         if [ ! -f _run_id ]; then
             echo "No run pending for $project. Skipping."
-            return
+            popd > /dev/null
+            continue
         fi
 
         runid=$(cat _run_id)
