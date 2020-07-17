@@ -51,6 +51,7 @@ FLAG_ALL=0
 FLAG_DURATION=0
 ARG_DURATION=30
 FLAG_RUN=0
+FLAG_COPY_POC=0
 ARG_MIN_CRASHES=0
 FLAG_SAVE=0
 FLAG_LOAD=0
@@ -80,6 +81,7 @@ Options:
   --target suffix  Change the Mayhemfile \"target\" directive to add the specified suffix to the existing \"target\"
   --run            Start a Mayhem run
   --min-crashes c  Specify the expected number of crashes when used with --run. Stops the run when enough crashes found.
+  --copy-poc       Copy proof of concept (if one exists) into the corpus folder when used with --run.
   --push           Push image to location(s) specified in \"baseimage\"
   --all            Run on all subdirectories
   --duration t     Specify alternate duration time for \`mayhem run\` command
@@ -210,6 +212,13 @@ run_cmd() {
 
     for mayhem in `ls mayhem/`; do
         pushd mayhem/$mayhem > /dev/null
+
+        # Copy poc folder over to corpus if one exists
+        if [ $FLAG_COPY_POC -ne 0 ]; then
+            mkdir -p corpus || true
+            cp poc/* corpus || true
+        fi
+
         if [ $FLAG_DURATION -ne 0 ]; then
             cmd="$cli run --duration $ARG_DURATION ."
         else
@@ -459,6 +468,10 @@ while [ $# -gt 0 ]; do
             fi
             ARG_MIN_CRASHES=$2
             shift
+            shift
+            ;;
+        --copy-poc)
+            FLAG_COPY_POC=1
             shift
             ;;
         --stop)

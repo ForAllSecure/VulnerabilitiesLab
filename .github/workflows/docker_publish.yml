@@ -84,8 +84,8 @@ jobs:
 
     - name: Run Mayhem (master)
       if: github.ref == 'refs/heads/master'
-      run: ./mayhemit.sh --run ${{ matrix.project }}
+      run: ./mayhemit.sh --run --copy-poc ${{ matrix.project }}
 
     - name: Run Mayhem (pull request)
       if: github.ref != 'refs/heads/master'
-      run: ./mayhemit.sh --run --min-crashes 1 --target "${{ github.sha }}" ${{ matrix.project }}
+      run: ./mayhemit.sh --run --copy-poc --min-crashes 1 --target "${{ github.sha }}" ${{ matrix.project }}
