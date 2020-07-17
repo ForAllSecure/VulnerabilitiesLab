@@ -29,14 +29,14 @@ jobs:
         #
         project:
           - cereal-cve-2020-11104-11105
-          # - matio-cve-2019-13107
-          # - netflix-cve-2019-10028
-          # - objdump-cve-2017-124xx
-          # - oniguruma-cve-2019-13224-13225
-          # - openssl-cve-2014-0160
-          # - stb-cve-2019-132xx
-          # - sthttpd-cve-2017-10671
-          # - uboot-cve-2019-13103-13106
+          - matio-cve-2019-13107
+          - netflix-cve-2019-10028
+          - objdump-cve-2017-124xx
+          - oniguruma-cve-2019-13224-13225
+          - openssl-cve-2014-0160
+          - stb-cve-2019-132xx
+          - sthttpd-cve-2017-10671
+          - uboot-cve-2019-13103-13106
     steps:
     - name: Install tools
       run: sudo apt-get install jq
