@@ -1,0 +1,20 @@
+program {
+  filters {
+    operand {
+      binary_op {
+        operator {
+          mul {
+          }
+        }
+        left {
+          length {
+          }
+        }
+        right {
+          identity {
+          }
+        }
+      }
+    }
+  }
+}
