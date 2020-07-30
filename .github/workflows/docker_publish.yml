@@ -7,115 +7,86 @@ on:
     branches: [ master ]
 
 jobs:
-
-  openssl-cve-2014-0160:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      # By disabling fail-fast, we can see the result of all projects rather than
+      # stopping everything if one project fails.
+      fail-fast: false
 
+      # This can help limit the number of jobs queued in Mayhem if the
+      # GH Actions workflow is cancelled before completion.
+      max-parallel: 2
+
+      matrix:
+        #
+        # These values map to each sub-folder under the repository
+        # root that contains a runnable project. This list needs to be
+        # maintained whenever a target is added/removed.
+        #
+        # It may be possible for this list to be dynamic using fromJson().
+        # See https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
+        #
+        project:
+          - libm-cve-2020-10029
+          - cereal-cve-2020-11104-11105
+          - matio-cve-2019-13107
+          - netflix-cve-2019-10028
+          - objdump-cve-2017-124xx
+          - oniguruma-cve-2019-13224-13225
+          - openssl-cve-2014-0160
+          - stb-cve-2019-132xx
+          - sthttpd-cve-2017-10671
+          - uboot-cve-2019-13103-13106
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: ./mayhemit.sh --build openssl-cve-2014-0160
+    - name: Install tools
+      run: sudo apt-get install jq
 
-    - name: Log into the registry
-      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set docker registry (master)
+      if: github.ref == 'refs/heads/master'
+      run: |
+        echo ::set-env name=IMAGE_TAG::"forallsecure/${{ matrix.project }}:latest"
+
+    - name: Set docker registry (pull request)
+      if: github.ref != 'refs/heads/master'
+      run: |
+        echo ::set-env name=DOCKER_REGISTRY::$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")
+        echo ::set-env name=IMAGE_TAG::$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")/${{ matrix.project }}:${{ github.head_ref}}
+
+    - name: Fetch the Mayhem CLI
+      run: |
+        mkdir -p $GITHUB_WORKSPACE/bin
+        wget -q -O $GITHUB_WORKSPACE/bin/mayhem "${{ secrets.MAYHEM_URL }}/cli/Linux/mayhem"
+        echo "::add-path::$GITHUB_WORKSPACE/bin"
+        chmod a+x $GITHUB_WORKSPACE/bin/mayhem
+
+    - name: Sanity Check
+      run: ./mayhemit.sh --sanity ${{ matrix.project }}
+
+    - name: Log in to Mayhem
+      run: mayhem login "${{ secrets.MAYHEM_URL }}" "${{ secrets.MAYHEM_TOKEN }}"
+
+    - name: Log into DockerHub (master)
+      if: github.ref == 'refs/heads/master'
+      run: ./.github/docker-login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+
+    - name: Log into Mayhem Docker Registry (pull request)
+      if: github.ref != 'refs/heads/master'
+      run: docker login -u mayhem -p "${{ secrets.MAYHEM_TOKEN }}" $DOCKER_REGISTRY
+
+    - name: Build the Docker image
+      run: ./mayhemit.sh --rewrite $IMAGE_TAG --build ${{ matrix.project }}
 
     - name: Push the docker image
-      run: ./.github/push.sh forallsecure/openssl-cve-2014-0160 "${{ github.ref }}"
+      run: docker push $IMAGE_TAG
 
-  cereal-cve-2020-11104-11105:
-    runs-on: ubuntu-latest
+    - name: Run Mayhem (master)
+      if: github.ref == 'refs/heads/master'
+      run: ./mayhemit.sh --run --copy-poc ${{ matrix.project }}
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: ./mayhemit.sh --build cereal-cve-2020-11104-11105
-
-    - name: Log into the registry
-      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
-
-    - name: Push the docker image
-      run: ./.github/push.sh forallsecure/cereal-cve-2020-11104-11105 "${{ github.ref }}"
-
-  sthttpd-cve-2017-10671:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: ./mayhemit.sh --build sthttpd-cve-2017-10671
-
-    - name: Log into the registry
-      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
-
-    - name: Push the docker image
-      run: ./.github/push.sh forallsecure/sthttpd-cve-2017-10671 "${{ github.ref }}"
-
-  netflix-cve-2019-10028:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: ./mayhemit.sh --build netflix-cve-2019-10028
-
-    - name: Log into the registry
-      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
-
-    - name: Push the docker image
-      run: ./.github/push.sh forallsecure/netflix-cve-2019-10028 "${{ github.ref }}"
-
-  objdump-cve-2017-124xx:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: ./mayhemit.sh --build objdump-cve-2017-124xx
-
-    - name: Log into the registry
-      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
-
-    - name: Push the docker image
-      run: ./.github/push.sh forallsecure/objdump-cve-2017-124xx "${{ github.ref }}"
-
-  uboot-cve-2019-13103-13106:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: ./mayhemit.sh --build uboot-cve-2019-13103-13106
-
-    - name: Log into the registry
-      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
-
-    - name: Push the docker image
-      run: ./.github/push.sh forallsecure/uboot-cve-2019-13103-13106 "${{ github.ref }}"
-
-  oniguruma-cve-2019-13224-13225:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: ./mayhemit.sh --build oniguruma-cve-2019-13224-13225
-
-    - name: Log into the registry
-      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
-
-    - name: Push the docker image
-      run: ./.github/push.sh forallsecure/oniguruma-cve-2019-13224-13225 "${{ github.ref }}"
-
-  libm-cve-2020-10029:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: ./mayhemit.sh --build libm-cve-2020-10029
-
-    - name: Log into the registry
-      run: ./.github/login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
-
-    - name: Push the docker image
-      run: ./.github/push.sh forallsecure/libm-cve-2020-10029 "${{ github.ref }}"
+    - name: Run Mayhem (pull request)
+      if: github.ref != 'refs/heads/master'
+      run: ./mayhemit.sh --run --copy-poc --min-crashes 1 --target "${{ github.sha }}" ${{ matrix.project }}
