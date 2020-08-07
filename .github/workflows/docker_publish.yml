@@ -64,6 +64,7 @@ jobs:
         chmod a+x $GITHUB_WORKSPACE/bin/mayhem
 
     - name: Sanity Check
+      if: github.ref == 'refs/heads/master'
       run: ./mayhemit.sh --sanity ${{ matrix.project }}
 
     - name: Log in to Mayhem
