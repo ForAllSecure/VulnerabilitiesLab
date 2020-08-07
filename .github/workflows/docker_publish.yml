@@ -53,9 +53,10 @@ jobs:
       if: github.ref != 'refs/heads/master'
       run: |
         echo ::set-env name=DOCKER_REGISTRY::$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")
-        echo ::set-env name=IMAGE_TAG::$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")/${{ matrix.project }}:${{ github.head_ref}}
+        echo ::set-env name=IMAGE_TAG::${{ matrix.project }}:${{ github.head_ref }}
 
     - name: Fetch the Mayhem CLI
+      if: github.ref == 'refs/heads/master'
       run: |
         mkdir -p $GITHUB_WORKSPACE/bin
         wget -q -O $GITHUB_WORKSPACE/bin/mayhem "${{ secrets.MAYHEM_URL }}/cli/Linux/mayhem"
@@ -66,26 +67,28 @@ jobs:
       run: ./mayhemit.sh --sanity ${{ matrix.project }}
 
     - name: Log in to Mayhem
+      if: github.ref == 'refs/heads/master'
       run: mayhem login "${{ secrets.MAYHEM_URL }}" "${{ secrets.MAYHEM_TOKEN }}"
 
     - name: Log into DockerHub (master)
       if: github.ref == 'refs/heads/master'
       run: ./.github/docker-login.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
-    - name: Log into Mayhem Docker Registry (pull request)
-      if: github.ref != 'refs/heads/master'
-      run: docker login -u mayhem -p "${{ secrets.MAYHEM_TOKEN }}" $DOCKER_REGISTRY
+    # - name: Log into Mayhem Docker Registry (pull request)
+    #   if: github.ref != 'refs/heads/master'
+    #   run: docker login -u mayhem -p "${{ secrets.MAYHEM_TOKEN }}" $DOCKER_REGISTRY
 
     - name: Build the Docker image
       run: ./mayhemit.sh --rewrite $IMAGE_TAG --build ${{ matrix.project }}
 
     - name: Push the docker image
+      if: github.ref == 'refs/heads/master'
       run: docker push $IMAGE_TAG
 
     - name: Run Mayhem (master)
       if: github.ref == 'refs/heads/master'
       run: ./mayhemit.sh --run --copy-poc ${{ matrix.project }}
 
-    - name: Run Mayhem (pull request)
-      if: github.ref != 'refs/heads/master'
-      run: ./mayhemit.sh --run --copy-poc --min-crashes 1 --target "${{ github.sha }}" ${{ matrix.project }}
+    # - name: Run Mayhem (pull request)
+    #   if: github.ref != 'refs/heads/master'
+    #   run: ./mayhemit.sh --run --copy-poc --min-crashes 1 --target "${{ github.sha }}" ${{ matrix.project }}
