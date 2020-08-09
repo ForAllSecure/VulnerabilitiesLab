@@ -34,12 +34,6 @@ command -v jq >/dev/null 2>&1 || { \
  exit 1
 }
 
-command -v mayhem >/dev/null 2>&1 || { \
- echo >&2 "[ERROR] mayhem not on PATH. Aborting."
- echo >&2 "[ERROR] Refer to the installation page of your Mayhem Instance for download instructions."
- exit 1
-}
-
 # Default flags and arguments
 FLAG_BUILD=0
 FLAG_REWRITE_BASEIMAGE=0
