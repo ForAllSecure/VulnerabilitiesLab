@@ -1,14 +1,16 @@
 # jq Use-After-Free
 
 [JQ](https://github.com/stedolan/jq) is a command line utility and popular C
-library for parsing and manipulating JSON.
+library for parsing and manipulating JSON. A use-after-free with potential for
+memory corruption was discovered via fuzzing by Harrison Green (@hgarrereyn)
+and has since been fixed.
 
 ## Build
 
-You can build or pull the tag `forallsecure/jq-defect-2020-1` as below:
+You can build or pull the tag `forallsecure/jq-defect-2020` as below:
 
 ```bash
-docker pull -t forallsecure/jq-defect-2020-1 .
+docker pull -t forallsecure/jq-defect-2020 .
 ```
 
 ## Running
@@ -16,7 +18,7 @@ docker pull -t forallsecure/jq-defect-2020-1 .
 Run using the Dockerfile-defined entrypoint:
 
 ```bash
-docker run --rm -it forallsecure/jq-defect-2020-1 .
+docker run --rm -it forallsecure/jq-defect-2020 .
 ```
 
 The time to find the crash is typically under a minute, though it can vary by
@@ -26,9 +28,10 @@ core.
 
 ## Defect Found: Use-After-Free
 
-The `poc/` directory contains a seed which triggers a heap use-after-free as
-detected by ASAN. This bug was reported to the maintainers of jq on 14 Feb
-2020, and is [now fixed](https://github.com/stedolan/jq/commit/9163e09605383a88f6e953d6cb5cc2aebe18c84f).
+The `poc/` directory contains a test casewhich triggers a heap use-after-free
+as detected by ASAN. This bug was reported to the maintainers of jq by Harrison
+Green on 14 Feb 2020, and is
+[now fixed](https://github.com/stedolan/jq/commit/9163e09605383a88f6e953d6cb5cc2aebe18c84f).
 This repository pulls the commit used to find the bug originally. The
 original code containing the defect (builtin.c:325-328) is below:
 
