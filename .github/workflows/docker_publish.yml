@@ -28,6 +28,7 @@ jobs:
         # See https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
         #
         project:
+          - libm-cve-2020-10029
           - cereal-cve-2020-11104-11105
           - matio-cve-2019-13107
           - netflix-cve-2019-10028
