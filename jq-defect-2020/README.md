@@ -2,8 +2,11 @@
 
 [JQ](https://github.com/stedolan/jq) is a command line utility and popular C
 library for parsing and manipulating JSON. A use-after-free with potential for
-memory corruption was discovered via fuzzing by Harrison Green (@hgarrereyn)
-and has since been fixed.
+memory corruption was discovered via structure-aware fuzzing by Harrison Green
+(@hgarrereyn) during his internship with ForAllSecure, and has since been fixed.
+
+You can read more about this bug and the techniques used to find it on our
+[blog](https://blog.forallsecure.com/learning-about-structure-aware-fuzzing-and-finding-json-bugs-to-boot).
 
 ## Build
 

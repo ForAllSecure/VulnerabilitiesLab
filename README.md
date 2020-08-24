@@ -18,6 +18,8 @@ period has terminated. You will find:
 
 We will be adding to this as find more bugs! Currently we have:
 
+ * [JQ Use-After-Free](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/jq-defect-2020)
+   - read more [here](https://blog.forallsecure.com/learning-about-structure-aware-fuzzing-and-finding-json-bugs-to-boot)
  * [Cereal CVE 2020-11104 & 2020-11105](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/cereal-cve-2020-11104-11105)
    with [blog post](https://blog.forallsecure.com/uncovering-memory-defects-in-cereal).
  * [Oniguruma Regex CVEs 2019-13224 & 2019-13225](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/oniguruma-cve-2019-13224-13225)
