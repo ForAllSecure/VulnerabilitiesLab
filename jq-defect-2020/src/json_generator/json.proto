@@ -1,0 +1,42 @@
+
+syntax = "proto3";
+
+message JSON_value {
+    oneof value {
+        JSON_object obj = 1;
+        JSON_array arr = 2;
+        JSON_number num = 3;
+        JSON_true true = 4;
+        JSON_false false = 5;
+        JSON_null null = 6;
+        string str = 7;
+    }
+}
+
+message JSON_object {
+    repeated JSON_key_value_pair entries = 1;
+}
+
+message JSON_key_value_pair {
+    string key = 1;
+    JSON_value value = 2;
+}
+
+message JSON_array {
+    repeated JSON_array_item items = 1;
+}
+
+message JSON_array_item {
+    JSON_value value = 1;
+}
+
+message JSON_number {
+    oneof value {
+        int64 long = 1;
+        double double = 2;
+    }
+}
+
+message JSON_true {}
+message JSON_false {}
+message JSON_null {}

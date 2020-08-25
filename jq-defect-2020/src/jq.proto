@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+import "json.proto";
+
+// top-level input type is a JQ program and JSON input
+message JQ_pair {
+    JQ_program program = 1;
+    JSON_value input = 2;
+}
+
+// a jq program consists of multiple JQ_filters separated by commas
+message JQ_program {
+    repeated JQ_filter filters = 1;
+}
+
+// this is where we start to pick our battles and only fill out what's needed
+message JQ_filter {
+    JQ_operand operand = 1;
+    // room here to do more
+}
+
+// input source (left hand argument)
+message JQ_operand {
+    oneof source {
+        JQ_identity identity = 1;
+        JQ_length length = 2;
+        JQ_keys keys = 3;
+        JQ_val val = 4;
+        JQ_binary_op binary_op = 5;
+    }
+}
+
+message JQ_identity {} // "."
+message JQ_length {} // "length"
+message JQ_keys {} // "keys"
+
+message JQ_val {
+    oneof val {
+        int64 long_value = 1;
+        string string_value = 2;
+    }
+}
+
+// Binary (2-operand) Operations
+message JQ_binary_op {
+    JQ_binary_operator operator = 1;
+    JQ_operand left = 2;
+    JQ_operand right = 3;   
+}
+
+message JQ_binary_operator {
+    oneof op {
+        JQ_op_add add = 1;
+        JQ_op_sub sub = 2;
+        JQ_op_mul mul = 3;
+        JQ_op_div div = 4;
+    }
+}
+
+message JQ_op_add {}
+message JQ_op_sub {}
+message JQ_op_mul {}
+message JQ_op_div {}

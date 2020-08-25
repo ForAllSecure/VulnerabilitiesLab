@@ -1,0 +1,8 @@
+version: '1.5'
+project: jq-defect-2020
+target: jq_parse_fuzzer
+baseimage: forallsecure/jq-defect-2020
+duration: 1200
+
+cmds:
+-   cmd: /src/harness/fuzzer_jq_pair
