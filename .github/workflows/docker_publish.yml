@@ -54,8 +54,13 @@ jobs:
     - name: Set docker registry (pull request)
       if: github.ref != 'refs/heads/master'
       run: |
-        echo 'DOCKER_REGISTRY=$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")'' >> $GITHUB_ENV
-        echo 'IMAGE_TAG=$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")/${{ matrix.project }}:${{ github.head_ref}}' >> $GITHUB_ENV
+        echo 'DOCKER_REGISTRY<<EOF' >> $GITHUB_ENV
+        $(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||") >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+
+        echo 'IMAGE_TAG<<EOF' >> $GITHUB_ENV
+        $(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")/${{ matrix.project }}:${{ github.head_ref}} >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
 
     - name: Fetch the Mayhem CLI
       run: |
