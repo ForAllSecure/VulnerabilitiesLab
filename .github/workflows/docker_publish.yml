@@ -39,6 +39,7 @@ jobs:
           - stb-cve-2019-132xx
           - sthttpd-cve-2017-10671
           - uboot-cve-2019-13103-13106
+          - sixlibrary-defect-2020
     steps:
     - name: Install tools
       run: sudo apt-get install jq
