@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9cbc72e6..af51a99d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,9 @@ project(six-library)
+ 
+ set(CMAKE_CXX_STANDARD 11)
+ 
++SET(CMAKE_CXX_FLAGS "-g ${CMAKE_CXX_FLAGS}")
++SET(CMAKE_C_FLAGS "-g ${CMAKE_C_FLAGS}")
++
+ if (${CMAKE_PROJECT_NAME} STREQUAL six-library)
+     # we are the top-level project and are responsible for configuration
+ 
