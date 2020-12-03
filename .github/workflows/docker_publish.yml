@@ -16,7 +16,7 @@ jobs:
 
       # This can help limit the number of jobs queued in Mayhem if the
       # GH Actions workflow is cancelled before completion.
-      max-parallel: 2
+      max-parallel: 8
 
       matrix:
         #
@@ -49,19 +49,24 @@ jobs:
     - name: Set docker registry (master)
       if: github.ref == 'refs/heads/master'
       run: |
-        echo ::set-env name=IMAGE_TAG::"forallsecure/${{ matrix.project }}:latest"
+        echo "IMAGE_TAG=forallsecure/${{ matrix.project }}:latest" >> $GITHUB_ENV
 
     - name: Set docker registry (pull request)
       if: github.ref != 'refs/heads/master'
       run: |
-        echo ::set-env name=DOCKER_REGISTRY::$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")
-        echo ::set-env name=IMAGE_TAG::$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")/${{ matrix.project }}:${{ github.head_ref}}
+        echo 'DOCKER_REGISTRY<<EOF' >> $GITHUB_ENV
+        echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||" >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+
+        echo 'IMAGE_TAG<<EOF' >> $GITHUB_ENV
+        echo $(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")/${{ matrix.project }}:${{ github.head_ref}} >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
 
     - name: Fetch the Mayhem CLI
       run: |
         mkdir -p $GITHUB_WORKSPACE/bin
         wget -q -O $GITHUB_WORKSPACE/bin/mayhem "${{ secrets.MAYHEM_URL }}/cli/Linux/mayhem"
-        echo "::add-path::$GITHUB_WORKSPACE/bin"
+        echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
         chmod a+x $GITHUB_WORKSPACE/bin/mayhem
 
     - name: Sanity Check
