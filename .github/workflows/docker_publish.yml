@@ -49,13 +49,13 @@ jobs:
     - name: Set docker registry (master)
       if: github.ref == 'refs/heads/master'
       run: |
-        echo ::set-env name=IMAGE_TAG::"forallsecure/${{ matrix.project }}:latest"
+        echo "IMAGE_TAG=forallsecure/${{ matrix.project }}:latest" >> $GITHUB_ENV
 
     - name: Set docker registry (pull request)
       if: github.ref != 'refs/heads/master'
       run: |
-        echo ::set-env name=DOCKER_REGISTRY::$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")
-        echo ::set-env name=IMAGE_TAG::$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")/${{ matrix.project }}:${{ github.head_ref}}
+        echo 'DOCKER_REGISTRY=$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")'' >> $GITHUB_ENV
+        echo 'IMAGE_TAG=$(echo "${{ secrets.MAYHEM_URL }}":5000 |sed -e "s|^https://||")/${{ matrix.project }}:${{ github.head_ref}}' >> $GITHUB_ENV
 
     - name: Fetch the Mayhem CLI
       run: |
