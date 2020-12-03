@@ -66,7 +66,7 @@ jobs:
       run: |
         mkdir -p $GITHUB_WORKSPACE/bin
         wget -q -O $GITHUB_WORKSPACE/bin/mayhem "${{ secrets.MAYHEM_URL }}/cli/Linux/mayhem"
-        echo "::add-path::$GITHUB_WORKSPACE/bin"
+        echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
         chmod a+x $GITHUB_WORKSPACE/bin/mayhem
 
     - name: Sanity Check
