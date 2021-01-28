@@ -2,7 +2,7 @@
 
 Reproducer for six-library Defect 2020. This repository contains the files necessary to find several bugs in the National Geospatial-Intelligence Agency's six-library. Among these bugs is a one that allows arbitrary control of program execution (program counter) resulting from an uninitialized variable error. As with all ForAllSecure VulnerabiltiesLab's publicly disclosed bugs, proper responsible disclosure procedures were followed (see below).
 
-Additional information about this bug can be found on the ForAllSecure blog [here](TODO).
+Additional information about this bug can be found on the ForAllSecure blog [here](https://forallsecure.com/blog/nga).
 
 ## Responsible disclosure timeline
 
