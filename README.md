@@ -18,6 +18,8 @@ period has terminated. You will find:
 
 We will be adding to this as find more bugs! Currently we have:
 
+ * [six-library Uninitialized Variable](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/sixlibrary-defect-2020) -
+   read more [here](https://forallsecure.com/blog/nga)
  * [JQ Use-After-Free](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/jq-defect-2020) -
    read more [here](https://blog.forallsecure.com/learning-about-structure-aware-fuzzing-and-finding-json-bugs-to-boot)
  * [GNU libm CVE-2020-10029](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/libm-cve-2020-10029) - read more [here](https://blog.forallsecure.com/cve-2020-10029-buffer-overflow-in-gnu-libc-trigonometry-functions)
