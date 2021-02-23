@@ -1,0 +1,26 @@
+diff --git a/cgi-src/util.c b/cgi-src/util.c
+index f02eb06..00f0a8f 100644
+--- a/cgi-src/util.c
++++ b/cgi-src/util.c
+@@ -95,7 +95,7 @@ int rind(char *s, char c) {
+     return -1;
+ }
+ 
+-int getline(char *s, int n, FILE *f) {
++int _getline(char *s, int n, FILE *f) {
+     register int i=0;
+ 
+     while(1) {
+diff --git a/cgi-src/util.h b/cgi-src/util.h
+index eded336..4173a30 100644
+--- a/cgi-src/util.h
++++ b/cgi-src/util.h
+@@ -6,7 +6,7 @@ char x2c(char *what);
+ void unescape_url(char *url);
+ void plustospace(char *str);
+ int rind(char *s, char c);
+-int getline(char *s, int n, FILE *f);
++int _getline(char *s, int n, FILE *f);
+ void send_fd(FILE *f, FILE *fd);
+ int ind(char *s, char c);
+ void escape_shell_cmd(char *cmd);
