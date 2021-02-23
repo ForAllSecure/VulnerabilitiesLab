@@ -17,7 +17,8 @@ period has terminated. You will find:
    run all of these locally.
 
 We will be adding to this as find more bugs! Currently we have:
-
+ 
+ * [NCSA-HTTPd CVE-1999-0067](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/ncsahttpd-cve-1999-0067) - read more [here](https://forallsecure.com/blog/fuzzing-for-command-injection)
  * [six-library Uninitialized Variable](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/sixlibrary-defect-2020) -
    read more [here](https://forallsecure.com/blog/nga)
  * [JQ Use-After-Free](https://github.com/ForAllSecure/VulnerabilitiesLab/tree/master/jq-defect-2020) -
