@@ -1,0 +1,7 @@
+vanilla="/usr/bin/touch /getfuzzed"
+newline="\x0a/usr/bin/touch /getfuzzed"
+backticks="`/usr/bin/touch /getfuzzed`"
+pipe="| /usr/bin/touch /getfuzzed"
+background="& /usr/bin/touch /getfuzzed"
+or="|| /usr/bin/touch /getfuzzed"
+semicolon="|| /usr/bin/touch /getfuzzed"

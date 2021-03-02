@@ -40,6 +40,7 @@ jobs:
           - sthttpd-cve-2017-10671
           - uboot-cve-2019-13103-13106
           - sixlibrary-defect-2020
+          - ncsahttpd-cve-1999-0067
     steps:
     - name: Install tools
       run: sudo apt-get install jq
