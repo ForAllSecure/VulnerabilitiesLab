@@ -32,7 +32,7 @@ jobs:
           - cereal-cve-2020-11104-11105
           - jq-defect-2020
           - matio-cve-2019-13107
-          - metadata-extractor-cve-2019-14262
+          - metadataextractor-cve-2019-14262
           - netflix-cve-2019-10028
           - objdump-cve-2017-124xx
           - oniguruma-cve-2019-13224-13225
