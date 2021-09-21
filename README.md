@@ -63,9 +63,8 @@ If you have access to dockerhub.com from your network:
 If you do not have access to dockerhub.com from your network, you will
 need to migrate the docker images to your local Mayhem docker
 repository, and rewrite the `Mayhemfile` to point to that registry.
-You can do this by running:
-```bash
-```
+Click [here](#migrating-to-a-closed-network-or-your-own-mayhem-docker-registry) for more details.
+
 
 To start Mayhem fuzzing, you can use `mayhem run`, or use this script
 as follows:
