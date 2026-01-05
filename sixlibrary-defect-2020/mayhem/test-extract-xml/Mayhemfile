@@ -1,7 +1,6 @@
-version: "1.7"
 project: six
 target: test-extract-xml
-baseimage: $MAYHEM_DOCKER_REGISTRY/six
+image: forallsecure/sixlibrary-defect-2020
 duration: 86400
 advanced_triage: true
 
